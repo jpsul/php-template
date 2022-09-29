@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  composer:
+    image: composer
+    environment:
+      - COMPOSER_CACHE_DIR=/app/var/cache/composer
+    volumes:
+      - .:/app
+    restart: "no"
+    
+  php:
+    image: php:8-cli
+    restart: "no"
+    volumes:
+      - .:/app
+    working_dir: /app
+  
+  phpunit:
+    image: php:8-cli
+    restart: "no"
+    volumes:
+      - .:/app
+    working_dir: /app
+    entrypoint: vendor/bin/phpunit
+  
+  fpm:
+    image: php:8-fpm
+    restart: always
+    volumes:
+      - .:/app
+  
+  nginx:
+    image: nginx:latest
+    ports:
+      - 8080:80
+    volumes:
+      - .:/app
+      - ./var/log/nginx:/var/log/nginx
+      - .conf/nginx/site.conf:/etc/nginx/conf.d/default.conf
+
+  test-mariadb:
+    image: mariadb:10.3
+    restart: "no"
+    environment:
+      MARIADB_ROOT_PASSWORD: "rootpw"
+      MARIADB_DATABASE: "testdb"
+      MARIADB_USER: "db_user01"
+      MARIADB_PASSWORD: "db_passwd_01"
+    ports:
+      - "3306:3306"
+    expose:
+      - "3306"
+    volumes:
+      - .conf/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+#      - dbdata:/var/lib/mysql
+      
+#volumes:
+#  dbdata:

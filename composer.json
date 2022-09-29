@@ -1,0 +1,16 @@
+{
+	"name": "jpsul/php-template",
+	"description": "Template for PHP projects",
+	"homepage": "https://github.com/jpsul/php-template",
+	"license": "MIT",
+	"require": {
+	},
+	"require-dev": {
+        "phpunit/phpunit": "^9.5"
+    },
+	"autoload": {
+		"psr-4": {
+			"sample\\": "src/"
+		}
+	}
+}
